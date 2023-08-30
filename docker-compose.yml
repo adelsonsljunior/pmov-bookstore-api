@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  pgsql:
+    image: 'postgres:alpine'
+    container_name: bookstore
+    ports:
+      - '${PG_PORT:-5432}:5432'
+    environment:
+      PGPASSWORD: '${PG_PASSWORD:-secret}'
+      POSTGRES_DB: '${PG_DB_NAME:-default}'
+      POSTGRES_USER: '${PG_USER?:err}'
+      POSTGRES_PASSWORD: '${PG_PASSWORD:-secret}'
+    volumes:
+      - 'sailpgsql:/var/lib/postgresql/data'
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${PG_DB_NAME:-default}", "-U", "${PG_USER}"]
+      retries: 3
+      timeout: 5s
+
+networks:
+  sail:
+    driver: bridge
+
+volumes:
+  sailpgsql:
