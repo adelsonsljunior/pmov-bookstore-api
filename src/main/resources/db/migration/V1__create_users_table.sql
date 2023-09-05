@@ -4,7 +4,7 @@ CREATE TABLE users (
 	user_name TEXT NOT NULL,
 	email TEXT NOT NULL UNIQUE,
 	user_password TEXT NOT NULL,
-	url_foto TEXT
+	url_photo TEXT
 );
 
 -- Inserção de dados na tabela de usuários
