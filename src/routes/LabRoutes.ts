@@ -12,6 +12,10 @@ router.get("/params/:nome", labController.paramns);
 
 router.post("/body", labController.body);
 
+router.post("/users", labController.createUser)
+
+router.get("/users", labController.findAllUsers)
+
 export default router;
 
 

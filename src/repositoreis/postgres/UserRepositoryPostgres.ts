@@ -21,7 +21,5 @@ export default class UserRepositoryPostgres implements IUserRepository{
         
         return newUser
         
-
-        
     }
 }

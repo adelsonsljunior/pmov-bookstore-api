@@ -8,6 +8,10 @@ const userRepository = new UserRepositoryPostgres();
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
+console.log(userRepository instanceof UserRepositoryPostgres);
+console.log(userService instanceof UserService);
+console.log(userController instanceof UserController);
+
 const router = express.Router();
 
 router.post("/", userController.create);
