@@ -1,16 +1,8 @@
 import express from "express";
 
 import UserController from "../controllers/UserController";
-import UserService from "../services/UserService";
-import UserRepositoryPostgres from "../repositoreis/postgres/UserRepositoryPostgres";
 
-const userRepository = new UserRepositoryPostgres();
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
-
-console.log(userRepository instanceof UserRepositoryPostgres);
-console.log(userService instanceof UserService);
-console.log(userController instanceof UserController);
+const userController = new UserController();
 
 const router = express.Router();
 

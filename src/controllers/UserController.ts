@@ -1,13 +1,7 @@
+import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import UserService from "../services/UserService";
 
 export default class UserController {
-
-    private userService: UserService;
-
-    constructor(userService: UserService) {
-        this.userService = userService;
-    }
 
     public async create(req: Request, res: Response) {
 
@@ -17,13 +11,19 @@ export default class UserController {
         console.log(email);
         console.log(password);
 
-        const newUser = await this.userService.create(name, email, password);
+        const prisma = new PrismaClient();
 
-        if (newUser) {
-            return res.status(201).json({ newUser })
-        } else {
-            return res.status(400).json({ menssage: "deu pau" })
-        }
+        const user = await prisma.user.create({
+            data:{
+                name,
+                email,
+                password,
+            },
+        });
+
+        console.log(user)
+        
+        res.status(201).json({ user });
 
     }
 }
