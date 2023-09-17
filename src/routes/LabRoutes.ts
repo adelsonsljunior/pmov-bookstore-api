@@ -12,9 +12,13 @@ router.get("/params/:nome", labController.paramns);
 
 router.post("/body", labController.body);
 
-router.post("/users", labController.createUser)
+router.post("/users", labController.createUser);
 
-router.get("/users", labController.findAllUsers)
+router.get("/users", labController.findAllUsers);
+
+router.post("/password/encrypt", labController.paswordHash);
+
+router.post("/password/compare", labController.passworsCompare);
 
 export default router;
 

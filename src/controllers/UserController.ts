@@ -22,7 +22,7 @@ export default class UserController {
         console.log(user);
 
         if (user) {
-            return res.status(400).json({ error: "Email already eemail already existsxists" });
+            return res.status(400).json({ error: "Email already exist" });
         }
 
         const createUser = await prisma.user.create({
