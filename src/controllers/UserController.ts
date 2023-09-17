@@ -51,6 +51,10 @@ export default class UserController {
             }
         });
 
+        if (!user) {
+            return res.status(404).json({ error: "Usuario não encontrado" });
+        }
+
         console.log(user);
 
         return res.status(200).json({ user });
