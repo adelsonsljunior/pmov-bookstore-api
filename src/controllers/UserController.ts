@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import bcrypt from 'bcrypt';
 import { UserCreateDto } from "../dtos/user/UserCreateDTO";
 import { UserUpdateDto } from "../dtos/user/UserUpdateDTO";
-import { UserFindDto } from "../dtos/user/UserFindDTO";
+import { UserLoginDto } from "../dtos/user/UserLoginDTO";
 
 export default class UserController {
 
@@ -151,6 +151,39 @@ export default class UserController {
         console.log(deleteUser);
 
         return res.status(204);
+
+    }
+
+    public async login(req: Request, res: Response) {
+
+        const userLoginDto = req.body as UserLoginDto;
+
+        console.log(userLoginDto.email);
+        console.log(userLoginDto.password);
+
+        const prisma = new PrismaClient();
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: userLoginDto.email
+            }
+        });
+
+        console.log(user);
+
+        if (!user) {
+            return res.status(400).json({ error: " email errado, parceiro " }); //mudar mensagem
+        }
+
+        const passwordMatch = await bcrypt.compare(userLoginDto.password, user!.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({ error: " senha errado, parceiro " }); //mudar mensagem
+        }
+
+        console.log("senha certa");
+
+        return res.status(200).json({ user });
 
     }
 
