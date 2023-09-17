@@ -8,13 +8,17 @@ cp .env.example .env
 
 docker compose up -d
 
-## installing dependencies
+## Installing dependencies
 
 npm i
 
-## run migrations
+## Run migrations
 
 npx prisma migrate dev
+
+## Seeding the database
+
+npx prisma db seed
 
 ## Run application
 
