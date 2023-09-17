@@ -1,22 +1,25 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
+import { UserCreateDto } from "../dtos/user/UserCreateDTO";
+import { UserUpdateDto } from "../dtos/user/UserUpdateDTO";
+import { UserFindDto } from "../dtos/user/UserFindDTO";
 
 export default class UserController {
 
     public async create(req: Request, res: Response) {
 
-        const { name, email, password } = req.body;
+        const userCreateDto = req.body as UserCreateDto;
 
-        console.log(name);
-        console.log(email);
-        console.log(password);
+        console.log(userCreateDto.name);
+        console.log(userCreateDto.email);
+        console.log(userCreateDto.password);
 
         const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where: {
-                email
+                email: userCreateDto.email
             }
         })
 
@@ -28,13 +31,13 @@ export default class UserController {
 
         const saltRounds = 10;
 
-        const passwordHash = await bcrypt.hash(password, saltRounds);
+        userCreateDto.password = await bcrypt.hash(userCreateDto.password, saltRounds);
 
         const createUser = await prisma.user.create({
             data: {
-                name,
-                email,
-                password: passwordHash
+                name: userCreateDto.name,
+                email: userCreateDto.email,
+                password: userCreateDto.password
             },
         });
 
@@ -82,12 +85,12 @@ export default class UserController {
 
         const id = parseInt(req.params.id);
 
-        const { name, email, password, urlPhoto } = req.body;
+        const userUpdateDto = req.body as UserUpdateDto;
 
-        console.log(name);
-        console.log(email);
-        console.log(password);
-        console.log(urlPhoto);
+        console.log(userUpdateDto.name);
+        console.log(userUpdateDto.email);
+        console.log(userUpdateDto.password);
+        console.log(userUpdateDto.urlPhoto);
 
         const prisma = new PrismaClient();
 
@@ -103,17 +106,17 @@ export default class UserController {
 
         const saltRounds = 10;
 
-        const passwordHash = await bcrypt.hash(password, saltRounds);
+        userUpdateDto.password = await bcrypt.hash(userUpdateDto.password, saltRounds);
 
         const updateUser = await prisma.user.update({
             where: {
                 id
             },
             data: {
-                name,
-                email,
-                password: passwordHash,
-                url_photo: urlPhoto,
+                name: userUpdateDto.name,
+                email: userUpdateDto.email,
+                password: userUpdateDto.password,
+                url_photo: userUpdateDto.urlPhoto,
             }
         });
 
@@ -151,6 +154,6 @@ export default class UserController {
 
     }
 
-    
+
 
 }
