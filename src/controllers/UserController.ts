@@ -13,11 +13,23 @@ export default class UserController {
 
         const prisma = new PrismaClient();
 
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        })
+
+        console.log(user);
+
+        if (user) {
+            return res.status(400).json({ error: "Email already eemail already existsxists" });
+        }
+
         const createUser = await prisma.user.create({
             data: {
                 name,
                 email,
-                password,
+                password
             },
         });
 
@@ -52,7 +64,7 @@ export default class UserController {
         });
 
         if (!user) {
-            return res.status(404).json({ error: "Usuario não encontrado" });
+            return res.status(404).json({ error: "User not found" });
         }
 
         console.log(user);
@@ -62,7 +74,6 @@ export default class UserController {
     }
 
     public async update(req: Request, res: Response) {
-
 
         const id = parseInt(req.params.id);
 
@@ -82,7 +93,7 @@ export default class UserController {
         });
 
         if (!user) {
-            return res.status(404).json({ error: "Usuario não encontrado" });
+            return res.status(404).json({ error: "User not found" });
         }
 
         const updateUser = await prisma.user.update({
@@ -116,7 +127,7 @@ export default class UserController {
         });
 
         if (!user) {
-            return res.status(404).json({ error: "Usuario não encontrado" });
+            return res.status(404).json({ error: "User not found" });
         }
 
         const deleteUser = await prisma.user.delete({

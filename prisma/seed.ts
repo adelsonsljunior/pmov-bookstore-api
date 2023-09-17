@@ -2,8 +2,8 @@ import { users } from "./seeds/users";
 import { PrismaClient } from "@prisma/client";
 
 
-async function usersSeed(){
-    
+async function usersSeed() {
+
     console.log(users);
 
     const prisma = new PrismaClient();
