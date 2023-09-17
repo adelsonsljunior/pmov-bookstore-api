@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import bcrypt from 'bcrypt';
 
 export default class UserController {
 
@@ -25,11 +26,15 @@ export default class UserController {
             return res.status(400).json({ error: "Email already exist" });
         }
 
+        const saltRounds = 10;
+
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
         const createUser = await prisma.user.create({
             data: {
                 name,
                 email,
-                password
+                password: passwordHash
             },
         });
 
@@ -96,6 +101,10 @@ export default class UserController {
             return res.status(404).json({ error: "User not found" });
         }
 
+        const saltRounds = 10;
+
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
         const updateUser = await prisma.user.update({
             where: {
                 id
@@ -103,7 +112,7 @@ export default class UserController {
             data: {
                 name,
                 email,
-                password,
+                password: passwordHash,
                 url_photo: urlPhoto,
             }
         });
@@ -141,5 +150,7 @@ export default class UserController {
         return res.status(204);
 
     }
+
+    
 
 }
