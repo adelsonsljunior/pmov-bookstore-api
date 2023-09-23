@@ -172,13 +172,13 @@ export default class UserController {
         console.log(user);
 
         if (!user) {
-            return res.status(400).json({ error: " email errado, parceiro " }); //mudar mensagem
+            return res.status(400).json({ error: " Incorrect email or password " }); 
         }
 
         const passwordMatch = await bcrypt.compare(userLoginDto.password, user!.password);
 
         if (!passwordMatch) {
-            return res.status(400).json({ error: " senha errado, parceiro " }); //mudar mensagem
+            return res.status(400).json({ error: " Incorrect email or password " });
         }
 
         console.log("senha certa");
