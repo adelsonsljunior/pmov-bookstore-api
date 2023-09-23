@@ -1,25 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
-import { UserCreateDto } from "../dtos/user/UserCreateDTO";
+import { userCreateInputDto } from "../dtos/user/UserCreateInputDTO";
 import { UserUpdateDto } from "../dtos/user/UserUpdateDTO";
 import { UserLoginDto } from "../dtos/user/UserLoginDTO";
+import { userCreateOutputDto } from "../dtos/user/UserCreateOutputDTO";
 
 export default class UserController {
 
     public async create(req: Request, res: Response) {
 
-        const userCreateDto = req.body as UserCreateDto;
+        const userCreateInputDto = req.body as userCreateInputDto;
 
-        console.log(userCreateDto.name);
-        console.log(userCreateDto.email);
-        console.log(userCreateDto.password);
+        console.log(userCreateInputDto.name);
+        console.log(userCreateInputDto.email);
+        console.log(userCreateInputDto.password);
 
         const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where: {
-                email: userCreateDto.email
+                email: userCreateInputDto.email
             }
         })
 
@@ -31,19 +32,25 @@ export default class UserController {
 
         const saltRounds = 10;
 
-        userCreateDto.password = await bcrypt.hash(userCreateDto.password, saltRounds);
+        userCreateInputDto.password = await bcrypt.hash(userCreateInputDto.password, saltRounds);
 
-        const createUser = await prisma.user.create({
+        const createdUser = await prisma.user.create({
             data: {
-                name: userCreateDto.name,
-                email: userCreateDto.email,
-                password: userCreateDto.password
+                name: userCreateInputDto.name,
+                email: userCreateInputDto.email,
+                password: userCreateInputDto.password
             },
         });
 
-        console.log(createUser)
+        console.log(createdUser)
 
-        return res.status(201).json({ createUser });
+        const returnedUser: userCreateOutputDto = {
+            id: createdUser.id,
+            email: createdUser.email,
+            name: createdUser.name
+            }
+
+        return res.status(201).json({ returnedUser });
 
     }
 
