@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { UserCreateDto } from "../dtos/user/UserCreateDTO";
 import { UserUpdateDto } from "../dtos/user/UserUpdateDTO";

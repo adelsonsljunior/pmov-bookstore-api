@@ -11,5 +11,3 @@ export const users = [
         password: "$2b$10$70B/Kl3t7LbuPBbGOPiPMOmbRRqtJbn6yh8Ol3hoIn62IXqbxFTG2" //12345678
     }
 ];
-
-//export default users;
