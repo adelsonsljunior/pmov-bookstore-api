@@ -19,3 +19,15 @@ model User {
 
   @@map("users")
 }
+
+model Book {
+  id             Int    @id @default(autoincrement())
+  author         String
+  description    String
+  url_image      String
+  number_pages   String
+  published_year String
+  price          Float
+
+  @@map("books")
+}
