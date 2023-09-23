@@ -6,6 +6,7 @@ import { UserUpdateInputDto } from "../dtos/user/UserUpdateInputDTO";
 import { UserLoginInputDto } from "../dtos/user/UserLoginInputDTO";
 import { userCreateOutputDto } from "../dtos/user/UserCreateOutputDTO";
 import UserUpdateOutputDto from "../dtos/user/UserUpdateOutputDTO";
+import UserFindByIdDto from "../dtos/user/UserFindByIdDTO";
 
 export default class UserController {
 
@@ -85,7 +86,16 @@ export default class UserController {
 
         console.log(user);
 
-        return res.status(200).json({ user });
+        const returnedUser: UserFindByIdDto = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            urlPhoto: user.url_photo ?? undefined,
+
+
+        }
+
+        return res.status(200).json({ returnedUser });
 
     }
 
@@ -134,7 +144,7 @@ export default class UserController {
             id: updatedUser.id,
             email: updatedUser.email,
             name: updatedUser.name,
-            urlPhoto: updatedUser.url_photo ?? undefined
+            urlPhoto: updatedUser.url_photo ?? undefined,
         }
 
         return res.status(200).json({ returnedUser });
