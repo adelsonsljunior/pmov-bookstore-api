@@ -2,9 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { userCreateInputDto } from "../dtos/user/UserCreateInputDTO";
-import { UserUpdateDto } from "../dtos/user/UserUpdateDTO";
-import { UserLoginDto } from "../dtos/user/UserLoginDTO";
+import { UserUpdateInputDto } from "../dtos/user/UserUpdateInputDTO";
+import { UserLoginInputDto } from "../dtos/user/UserLoginInputDTO";
 import { userCreateOutputDto } from "../dtos/user/UserCreateOutputDTO";
+import UserUpdateOutputDto from "../dtos/user/UserUpdateOutputDTO";
 
 export default class UserController {
 
@@ -48,7 +49,7 @@ export default class UserController {
             id: createdUser.id,
             email: createdUser.email,
             name: createdUser.name
-            }
+        }
 
         return res.status(201).json({ returnedUser });
 
@@ -92,12 +93,12 @@ export default class UserController {
 
         const id = parseInt(req.params.id);
 
-        const userUpdateDto = req.body as UserUpdateDto;
+        const userUpdateInputDto = req.body as UserUpdateInputDto;
 
-        console.log(userUpdateDto.name);
-        console.log(userUpdateDto.email);
-        console.log(userUpdateDto.password);
-        console.log(userUpdateDto.urlPhoto);
+        console.log(userUpdateInputDto.name);
+        console.log(userUpdateInputDto.email);
+        console.log(userUpdateInputDto.password);
+        console.log(userUpdateInputDto.urlPhoto);
 
         const prisma = new PrismaClient();
 
@@ -113,23 +114,30 @@ export default class UserController {
 
         const saltRounds = 10;
 
-        userUpdateDto.password = await bcrypt.hash(userUpdateDto.password, saltRounds);
+        userUpdateInputDto.password = await bcrypt.hash(userUpdateInputDto.password, saltRounds);
 
-        const updateUser = await prisma.user.update({
+        const updatedUser = await prisma.user.update({
             where: {
                 id
             },
             data: {
-                name: userUpdateDto.name,
-                email: userUpdateDto.email,
-                password: userUpdateDto.password,
-                url_photo: userUpdateDto.urlPhoto,
-            }
+                name: userUpdateInputDto.name,
+                email: userUpdateInputDto.email,
+                password: userUpdateInputDto.password,
+                url_photo: userUpdateInputDto.urlPhoto,
+            },
         });
 
-        console.log(updateUser);
+        console.log(updatedUser);
 
-        return res.status(200).json({ updateUser });
+        const returnedUser: UserUpdateOutputDto = {
+            id: updatedUser.id,
+            email: updatedUser.email,
+            name: updatedUser.name,
+            urlPhoto: updatedUser.url_photo ?? undefined
+        }
+
+        return res.status(200).json({ returnedUser });
 
     }
 
@@ -163,16 +171,16 @@ export default class UserController {
 
     public async login(req: Request, res: Response) {
 
-        const userLoginDto = req.body as UserLoginDto;
+        const userLoginInputDto = req.body as UserLoginInputDto;
 
-        console.log(userLoginDto.email);
-        console.log(userLoginDto.password);
+        console.log(userLoginInputDto.email);
+        console.log(userLoginInputDto.password);
 
         const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where: {
-                email: userLoginDto.email
+                email: userLoginInputDto.email
             }
         });
 
@@ -182,7 +190,7 @@ export default class UserController {
             return res.status(400).json({ error: " Incorrect email or password " }); 
         }
 
-        const passwordMatch = await bcrypt.compare(userLoginDto.password, user!.password);
+        const passwordMatch = await bcrypt.compare(userLoginInputDto.password, user!.password);
 
         if (!passwordMatch) {
             return res.status(400).json({ error: " Incorrect email or password " });
@@ -190,7 +198,13 @@ export default class UserController {
 
         console.log("senha certa");
 
-        return res.status(200).json({ user });
+        const returnedUser: UserUpdateOutputDto = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+        }
+
+        return res.status(200).json({ returnedUser });
 
     }
 

@@ -1,6 +1,6 @@
-export class UserUpdateDto {
+export class UserUpdateInputDto {
     name: string;
     email: string;
     password: string;
-    urlPhoto: string;
+    urlPhoto?: string;
 }
