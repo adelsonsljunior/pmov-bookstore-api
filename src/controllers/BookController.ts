@@ -7,7 +7,7 @@ export default class BookController{
         
         const prisma = new PrismaClient;
 
-        const books = prisma.book.findMany({});
+        const books = await prisma.book.findMany({});
 
         console.log(books);
 

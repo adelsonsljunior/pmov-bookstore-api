@@ -22,11 +22,12 @@ model User {
 
 model Book {
   id             Int    @id @default(autoincrement())
+  title          String
   author         String
   description    String
   url_image      String
-  number_pages   String
-  published_year String
+  number_pages   Int
+  published_year Int
   price          Float
 
   @@map("books")
