@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import BookFindByIdDto from "../dtos/book/BookFindByIdDTO";
 
 export default class BookController {
 
@@ -33,7 +34,18 @@ export default class BookController {
             return res.status(404).json({ error: "Book not found" });
         }
 
-        return res.status(200).json({ book });
+        const returnedBook: BookFindByIdDto = {
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            description: book.description,
+            urlImage: book.url_image,
+            numberPages: book.number_pages,
+            publishedYear: book.published_year,
+            price: book.price,
+        }
+
+        return res.status(200).json({ returnedBook });
 
     }
 

@@ -91,8 +91,6 @@ export default class UserController {
             name: user.name,
             email: user.email,
             urlPhoto: user.url_photo ?? undefined,
-
-
         }
 
         return res.status(200).json({ returnedUser });
